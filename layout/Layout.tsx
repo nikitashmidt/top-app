@@ -4,9 +4,8 @@ import cn from "classnames";
 import { Header } from "../components/Header/Header";
 import { Sidebar } from "../components/Sidebar/Sidebar";
 import { Footer } from "../components/Footer/Footer";
-
 import { LayoutProps } from "./Layout.props";
-
+import { AppContextProvider, IAppContext } from "../context/app.context";
 import styles from "./Layout.module.css";
 
 const Layout = ({ children }: LayoutProps): JSX.Element => {
@@ -20,14 +19,16 @@ const Layout = ({ children }: LayoutProps): JSX.Element => {
   );
 };
 
-export const withLayout = <T extends Record<string, unknown>>(
+export const withLayout = <T extends Record<string, unknown> & IAppContext>(
   Component: FunctionComponent<T>
 ) => {
   return function withLayoutComponent(props: T): JSX.Element {
     return (
-      <Layout>
-        <Component {...props} />
-      </Layout>
+      <AppContextProvider menu={props.menu} firstCategory={props.firstCategory} >
+        <Layout>
+          <Component {...props} />
+        </Layout>
+      </AppContextProvider>
     );
   };
 };
